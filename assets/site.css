@@ -179,6 +179,25 @@ a { color: var(--link); }
 
 .dl:hover .dl-meta { color: var(--title-fg); }
 
+.ver h2 { margin-bottom: 0.35rem; }
+
+.ver .note {
+  margin: 0 0 0.6rem;
+  color: var(--muted);
+}
+
+.file { display: grid; gap: 6px; }
+
+.sum {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.sum code { font-size: 0.8rem; }
+
 .subnav {
   display: flex;
   flex-wrap: wrap;
