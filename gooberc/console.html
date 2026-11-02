@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>goober.console — GooberOS</title>
+  <link rel="icon" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="../index.html">GooberOS</a>
+    <nav>
+      <a href="../index.html">Overview</a>
+      <a href="../downloads.html">Download</a>
+      <a class="here" href="index.html">GooberC</a>
+    </nav>
+  </header>
+  <div class="desktop">
+    <article class="window">
+      <h1 class="titlebar">goober.console</h1>
+      <div class="client">
+        <nav class="subnav">
+          <a href="index.html">Tour</a>
+          <a href="spec.html">Language</a>
+          <a class="here" href="console.html">Console</a>
+          <a href="gui.html">GUI</a>
+          <a href="fs.html">Files</a>
+          <a href="keys.html">Keys</a>
+          <a href="color.html">Colors</a>
+          <a href="dos.html">DOS</a>
+          <a href="auto.html">Auto</a>
+          <a href="gfx3d.html">3D</a>
+        </nav>
+        <p>Console I/O and the core language builtins. This page follows <code>gooberc/libs/console.md</code>.</p>
+        <pre><code>use goober.console</code></pre>
+        <h2>Operations</h2>
+        <table>
+          <thead><tr><th>Form</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>print "..."</code> / <code>print &lt;expr&gt;</code></td><td>Write to the console</td></tr>
+            <tr><td><code>exit</code></td><td>Terminate</td></tr>
+            <tr><td><code>len x</code></td><td>Length of a string, list, or map</td></tr>
+            <tr><td><code>slice s a b</code></td><td>Substring <code>[a, b)</code></td></tr>
+            <tr><td><code>find hay needle</code></td><td>Index of a substring, or -1</td></tr>
+            <tr><td><code>alloc n</code> / <code>free p</code></td><td>Heap blob</td></tr>
+            <tr><td><code>map</code></td><td>Empty string-keyed map</td></tr>
+            <tr><td><code>get</code> / <code>set</code> / <code>push</code></td><td>List or map access</td></tr>
+            <tr><td><code>typeof v</code></td><td>0 int, 1 str, 2 list, 3 blob, 4 map</td></tr>
+            <tr><td><code>errmsg</code></td><td>Last runtime error string</td></tr>
+          </tbody>
+        </table>
+        <h2>Control</h2>
+        <p><code>fn</code> / <code>call</code> / <code>return</code>, and <code>if</code> / <code>while</code> / <code>for</code> / <code>break</code> / <code>continue</code>.</p>
+        <p>Keep the line-oriented <code>end</code> block style. After a failed <code>read</code>, <code>listdir</code>, or <code>set</code>, check <code>errmsg</code>. The full write-up is the <a href="spec.html">language page</a>.</p>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

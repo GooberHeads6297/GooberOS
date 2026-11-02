@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>goober.gui — GooberOS</title>
+  <link rel="icon" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="../index.html">GooberOS</a>
+    <nav>
+      <a href="../index.html">Overview</a>
+      <a href="../downloads.html">Download</a>
+      <a class="here" href="index.html">GooberC</a>
+    </nav>
+  </header>
+  <div class="desktop">
+    <article class="window">
+      <h1 class="titlebar">goober.gui</h1>
+      <div class="client">
+        <nav class="subnav">
+          <a href="index.html">Tour</a>
+          <a href="spec.html">Language</a>
+          <a href="console.html">Console</a>
+          <a class="here" href="gui.html">GUI</a>
+          <a href="fs.html">Files</a>
+          <a href="keys.html">Keys</a>
+          <a href="color.html">Colors</a>
+          <a href="dos.html">DOS</a>
+          <a href="auto.html">Auto</a>
+          <a href="gfx3d.html">3D</a>
+        </nav>
+        <p>Windowed apps on the desktop: text lines, or a color canvas for artwork and simple games. This page follows <code>gooberc/libs/gui.md</code>.</p>
+        <pre><code>use goober.gui
+app gui</code></pre>
+
+        <h2>Window and text</h2>
+        <ul>
+          <li><code>window "Title" WxH</code> creates a window</li>
+          <li><code>text "..."</code> / <code>text &lt;expr&gt;</code> appends a text line</li>
+          <li><code>cleargui</code> clears the lines and marks the window interactive</li>
+          <li><code>wait</code> blocks until the user dismisses the window</li>
+        </ul>
+
+        <h2>Color canvas</h2>
+        <p>Prefer named colors (<code>NAVY</code>, <code>RED</code>, <code>PANEL</code>, <code>INK</code>). Hex <code>0xRRGGBB</code> still works. See <a href="color.html">Colors</a>.</p>
+        <ul>
+          <li><code>fill color</code> clears the canvas and sets the background</li>
+          <li><code>rect x y w h color</code> draws a filled rectangle in client coordinates</li>
+          <li><code>label x y str fg bg</code> draws a string at <code>(x, y)</code></li>
+          <li><code>present</code> marks the window dirty. Call it after a frame’s draw list</li>
+        </ul>
+        <pre><code>fill NAVY
+rect 8 8 200 24 PANEL
+label 16 14 "Score " + str score INK PANEL
+rect 40 40 28 28 LIME
+present</code></pre>
+
+        <h2>Input and timing</h2>
+        <ul>
+          <li><code>getkey</code> polls one key (0 if none) and pumps a desktop frame</li>
+          <li><code>keyheld k</code> is 1 if that key is currently held. It does not consume the queue</li>
+          <li><code>clicked</code> is 1 if the user clicked the window since the last read. Read it after <code>getkey</code> or <code>sleep</code></li>
+          <li><code>mousex</code> / <code>mousey</code> are the client coordinates of that click</li>
+          <li><code>millis</code> is milliseconds since boot</li>
+          <li><code>winclosed</code> is 1 if the window was closed</li>
+          <li><code>str n</code> turns an int into a decimal string</li>
+          <li><code>num s</code> parses a decimal string</li>
+          <li><code>exit</code> terminates</li>
+          <li><code>sleep N</code> waits about <code>N</code> milliseconds while pumping the desktop</li>
+        </ul>
+        <p>Key names are on the <a href="keys.html">Keys</a> page.</p>
+        <pre><code>var last = millis
+while winclosed == 0
+  var now = millis
+  var dt = now - last
+  last = now
+  present
+  sleep 1
+end</code></pre>
+        <p>Interactive games should <code>fill</code> and redraw each frame, or use <code>cleargui</code> and <code>text</code>. Poll <code>getkey</code> and <code>keyheld</code>, and exit on Escape or <code>winclosed</code>. Keep a draw list under about 384 commands per frame.</p>
+
+        <div class="shots">
+          <figure class="shot">
+            <div class="shot-frame">
+              <div class="shot-title">A GooberC window</div>
+              <img src="../assets/A-GooberC-Window.png" alt="A GooberC window">
+            </div>
+          </figure>
+          <figure class="shot">
+            <div class="shot-frame">
+              <div class="shot-title">A canvas frame</div>
+              <img src="../assets/A-canvas-Frame.png" alt="A canvas frame">
+            </div>
+          </figure>
+        </div>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

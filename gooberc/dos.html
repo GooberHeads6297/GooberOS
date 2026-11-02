@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>goober.dos — GooberOS</title>
+  <link rel="icon" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="../index.html">GooberOS</a>
+    <nav>
+      <a href="../index.html">Overview</a>
+      <a href="../downloads.html">Download</a>
+      <a class="here" href="index.html">GooberC</a>
+    </nav>
+  </header>
+  <div class="desktop">
+    <article class="window">
+      <h1 class="titlebar">goober.dos</h1>
+      <div class="client">
+        <nav class="subnav">
+          <a href="index.html">Tour</a>
+          <a href="spec.html">Language</a>
+          <a href="console.html">Console</a>
+          <a href="gui.html">GUI</a>
+          <a href="fs.html">Files</a>
+          <a href="keys.html">Keys</a>
+          <a href="color.html">Colors</a>
+          <a class="here" href="dos.html">DOS</a>
+          <a href="auto.html">Auto</a>
+          <a href="gfx3d.html">3D</a>
+        </nav>
+        <p>Launch GooberDOS, the soft MS-DOS guest, from GooberC. There is no separate <code>use goober.dos</code>. <code>dos_run</code> is a core builtin. This page follows <code>gooberc/libs/dos.md</code>.</p>
+        <table>
+          <thead><tr><th>Form</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td><code>dos_run path</code></td><td>Starts GooberDOS on a <code>.COM</code> or <code>.EXE</code> under <code>/Dos</code>, or any VFS path. Returns 1 when the launch is ok</td></tr>
+          </tbody>
+        </table>
+        <pre><code>use goober.console
+dos_run "Dos/Apps/HELLO.COM"
+dos_run "Dos/Apps/VER.COM"
+exit</code></pre>
+        <h2>Shared folder</h2>
+        <p>Guest <code>C:\</code> is host <code>/Dos</code>. Drop apps into <code>/Dos</code> or <code>/Dos/Apps</code> with File Explorer, then double-click them or call <code>dos_run</code>.</p>
+        <p>GooberDOS runs real-mode DOS apps (files, text, Mode 13h, mouse) without sound. The guest notes live in <code>dosemu/README.md</code> in the source tree.</p>
+        <div class="shots">
+          <figure class="shot">
+            <div class="shot-frame">
+              <div class="shot-title">GooberDOS</div>
+              <img src="../assets/GooberDos.png" alt="GooberDOS">
+            </div>
+          </figure>
+        </div>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

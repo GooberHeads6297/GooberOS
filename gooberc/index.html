@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GooberC — GooberOS</title>
+  <link rel="icon" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="../index.html">GooberOS</a>
+    <nav>
+      <a href="../index.html">Overview</a>
+      <a href="../downloads.html">Download</a>
+      <a class="here" href="index.html">GooberC</a>
+    </nav>
+  </header>
+  <div class="desktop">
+    <article class="window">
+      <h1 class="titlebar">GooberC</h1>
+      <div class="client">
+        <nav class="subnav">
+          <a class="here" href="index.html">Tour</a>
+          <a href="spec.html">Language</a>
+          <a href="console.html">Console</a>
+          <a href="gui.html">GUI</a>
+          <a href="fs.html">Files</a>
+          <a href="keys.html">Keys</a>
+          <a href="color.html">Colors</a>
+          <a href="dos.html">DOS</a>
+          <a href="auto.html">Auto</a>
+          <a href="gfx3d.html">3D</a>
+        </nav>
+
+        <p class="lead">GooberC is the programming language for GooberOS apps. You write a short text file, compile it, and run the result as a normal app on the desktop or in the shell.</p>
+        <p>A program is a <code>.gc</code> file: one idea per line, blocks closed with <code>end</code>, and a <code>use</code> line that names the part of GooberOS you need. The compiler turns that file into a <code>.gob</code> program the OS can run.</p>
+        <pre><code>use goober.console
+
+fn greet name
+  print "hi "
+  print name
+end
+
+call greet "Goober"
+exit</code></pre>
+
+        <div class="shots">
+          <figure class="shot">
+            <div class="shot-frame">
+              <div class="shot-title">A .gc file in the editor</div>
+              <img src="../assets/A-GC-File-in-The-editor.png" alt="A .gc file open in the editor">
+            </div>
+          </figure>
+        </div>
+
+        <h2>How the compiler works</h2>
+        <p><code>gooberc</code> reads your <code>.gc</code> file and writes a <code>.gob</code> file. That <code>.gob</code> is what you launch.</p>
+        <ol>
+          <li><strong>Read the source.</strong> The compiler opens the <code>.gc</code> file and walks it one line at a time. Blank lines and lines that start with <code>#</code> are comments and are skipped.</li>
+          <li><strong>Check the program.</strong> Each line has to be a known command. Blocks opened by <code>fn</code>, <code>if</code>, <code>while</code>, or <code>for</code> must be closed with <code>end</code>. A <code>call</code> must name a function you defined. If something is wrong, the compiler stops and prints the bad line instead of writing a program.</li>
+          <li><strong>Write the <code>.gob</code>.</strong> A good compile produces a small binary: the letters <code>GOB</code>, version <strong>2</strong>, then bytecode. GooberOS loads that file and runs it in its built-in virtual machine.</li>
+          <li><strong>Run it.</strong> On GooberOS, <code>run</code> starts the <code>.gob</code>. A console program prints in the shell. A GUI program opens a window.</li>
+        </ol>
+        <table>
+          <thead>
+            <tr><th>Where you are</th><th>Command</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>GooberOS shell</td><td><code>gooberc Welcome.gc -o Apps/Welcome.gob</code></td></tr>
+            <tr><td>Build machine</td><td><code>python3 gooberc/gooberc.py gooberc/examples/HelloFn.gc -o HelloFn.gob</code></td></tr>
+          </tbody>
+        </table>
+        <p>The in-OS command and <code>gooberc.py</code> accept the same source. Use the Python compiler to check a file before you copy it onto a GooberOS disk. Use the shell command when you are already booted.</p>
+
+        <div class="shots">
+          <figure class="shot">
+            <div class="shot-frame">
+              <div class="shot-title">The gooberc line in the shell</div>
+              <img src="../assets/The-gooberc-line-in-the-shell.png" alt="The gooberc compile line in the shell">
+            </div>
+          </figure>
+          <figure class="shot">
+            <div class="shot-frame">
+              <div class="shot-title">The app after run</div>
+              <img src="../assets/The-app-after-run.png" alt="The app after run">
+            </div>
+          </figure>
+        </div>
+
+        <h2>Compile and run it yourself</h2>
+        <h3>On an installed GooberOS</h3>
+        <p>Example sources live in <code>Apps/src</code>. Built apps live in <code>Apps</code>.</p>
+        <pre><code>cd Apps/src
+gooberc Welcome.gc -o Apps/Welcome.gob
+run Apps/Welcome.gob</code></pre>
+        <p><code>Welcome.gc</code> is a small window that waits for a click, then closes. The shell prints <code>gooberc: wrote ...</code> when the compile succeeds. If it prints <code>gooberc: compile failed</code> or <code>gooberc: bad line:</code>, fix the line it names. A missing <code>end</code> is the usual cause.</p>
+        <h3>On the build machine</h3>
+        <pre><code>python3 gooberc/gooberc.py gooberc/examples/HelloFn.gc -o HelloFn.gob</code></pre>
+        <p>That writes <code>HelloFn.gob</code> in the current directory. The host compiler only produces the <code>.gob</code>. It does not boot the OS.</p>
+
+        <h2>A first program</h2>
+        <p>Save this as <code>Hi.gc</code>. On GooberOS, <code>Apps/src/Hi.gc</code> is a good place.</p>
+        <pre><code>use goober.console
+
+fn greet name
+  print "hi "
+  print name
+end
+
+call greet "Goober"
+exit</code></pre>
+        <pre><code>gooberc Hi.gc -o Apps/Hi.gob
+run Apps/Hi.gob</code></pre>
+        <p>The shell prints <code>hi </code> and <code>Goober</code> on their own lines, then the program ends.</p>
+
+        <h2>Examples</h2>
+        <table>
+          <thead>
+            <tr><th>File</th><th>What it shows</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>Welcome.gc</code></td><td>A window with a few lines of text</td></tr>
+            <tr><td><code>HelloFn.gc</code></td><td>A function and a bit of arithmetic</td></tr>
+            <tr><td><code>HelloArgs.gc</code></td><td>A function argument and a <code>for</code> loop</td></tr>
+            <tr><td><code>Calculator.gc</code></td><td>A small GUI you can click</td></tr>
+            <tr><td><code>SnakeGame.gc</code></td><td>A game loop with keys and drawing</td></tr>
+          </tbody>
+        </table>
+        <p class="muted">These live in <code>gooberc/examples/</code> in the source tree, and under <code>/Apps/src/</code> on a booted system.</p>
+
+        <h2>Reference</h2>
+        <p>This page is the tour. The pages below are the lookup.</p>
+        <table>
+          <thead>
+            <tr><th>You want</th><th>Open</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Every statement, value, and the <code>.gob</code> layout</td><td><a href="spec.html">Language</a></td></tr>
+            <tr><td>Printing, functions, lists, maps</td><td><a href="console.html">Console</a></td></tr>
+            <tr><td>Windows, buttons, drawing, keys in a loop</td><td><a href="gui.html">GUI</a></td></tr>
+            <tr><td>Reading and writing files, paths</td><td><a href="fs.html">Files</a></td></tr>
+            <tr><td>Key names such as <code>KEY_UP</code> and <code>KEY_W</code></td><td><a href="keys.html">Keys</a></td></tr>
+            <tr><td>Color names such as <code>RED</code>, <code>NAVY</code>, and <code>PANEL</code></td><td><a href="color.html">Colors</a></td></tr>
+            <tr><td>Starting a DOS program with <code>dos_run</code></td><td><a href="dos.html">DOS</a></td></tr>
+            <tr><td>Timed scripts</td><td><a href="auto.html">Auto</a></td></tr>
+            <tr><td>The reserved 3D canvas</td><td><a href="gfx3d.html">3D</a></td></tr>
+          </tbody>
+        </table>
+        <p>On a booted system the module notes are the files under <code>/lib/goober/</code>. <code>.gob</code> files must be version <strong>2</strong>. A program built by an older compiler is rejected. Compile its <code>.gc</code> source again with the current <code>gooberc</code>.</p>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

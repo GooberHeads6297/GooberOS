@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>goober.gfx3d — GooberOS</title>
+  <link rel="icon" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="../index.html">GooberOS</a>
+    <nav>
+      <a href="../index.html">Overview</a>
+      <a href="../downloads.html">Download</a>
+      <a class="here" href="index.html">GooberC</a>
+    </nav>
+  </header>
+  <div class="desktop">
+    <article class="window">
+      <h1 class="titlebar">goober.gfx3d</h1>
+      <div class="client">
+        <nav class="subnav">
+          <a href="index.html">Tour</a>
+          <a href="spec.html">Language</a>
+          <a href="console.html">Console</a>
+          <a href="gui.html">GUI</a>
+          <a href="fs.html">Files</a>
+          <a href="keys.html">Keys</a>
+          <a href="color.html">Colors</a>
+          <a href="dos.html">DOS</a>
+          <a href="auto.html">Auto</a>
+          <a class="here" href="gfx3d.html">3D</a>
+        </nav>
+        <p>Reserved 3D and canvas module. The opcodes compile today. Drawing is still a stub. This page follows <code>gooberc/libs/gfx3d.md</code>.</p>
+        <pre><code>use goober.gfx3d</code></pre>
+        <ul>
+          <li><code>clear 0xRRGGBBAA</code> is reserved to clear a canvas. It does not draw yet</li>
+          <li><code>print "..."</code> can leave a console note while you prototype</li>
+          <li><code>exit</code> terminates</li>
+        </ul>
+        <h2>Planned</h2>
+        <ul>
+          <li>Create a canvas and present a frame</li>
+          <li>Mesh and camera helpers</li>
+          <li>A software or GPU raster path</li>
+        </ul>
+        <p>Use <code>use goober.gfx3d</code> and <code>clear</code> so samples stay forward-compatible. Do not assume pixels are drawn yet. Two-dimensional windows use <a href="gui.html">goober.gui</a>.</p>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

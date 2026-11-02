@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>goober.fs — GooberOS</title>
+  <link rel="icon" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="../index.html">GooberOS</a>
+    <nav>
+      <a href="../index.html">Overview</a>
+      <a href="../downloads.html">Download</a>
+      <a class="here" href="index.html">GooberC</a>
+    </nav>
+  </header>
+  <div class="desktop">
+    <article class="window">
+      <h1 class="titlebar">goober.fs</h1>
+      <div class="client">
+        <nav class="subnav">
+          <a href="index.html">Tour</a>
+          <a href="spec.html">Language</a>
+          <a href="console.html">Console</a>
+          <a href="gui.html">GUI</a>
+          <a class="here" href="fs.html">Files</a>
+          <a href="keys.html">Keys</a>
+          <a href="color.html">Colors</a>
+          <a href="dos.html">DOS</a>
+          <a href="auto.html">Auto</a>
+          <a href="gfx3d.html">3D</a>
+        </nav>
+        <p>Filesystem and path builtins. This page follows <code>gooberc/libs/fs.md</code>.</p>
+        <pre><code>use goober.fs</code></pre>
+        <table>
+          <thead><tr><th>Form</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td><code>exists path</code></td><td>1 if the path exists, otherwise 0</td></tr>
+            <tr><td><code>read path</code></td><td>File contents as a string, or 0 on failure</td></tr>
+            <tr><td><code>write path data</code></td><td>Writes the string <code>data</code></td></tr>
+            <tr><td><code>listdir path</code></td><td>A list of entry names, or 0 if the path is missing</td></tr>
+            <tr><td><code>path_join a b</code></td><td><code>"a/b"</code>, with slashes handled</td></tr>
+            <tr><td><code>dirname p</code> / <code>basename p</code></td><td>Path split</td></tr>
+          </tbody>
+        </table>
+        <pre><code>use goober.console
+use goober.fs
+
+var dir = path_join "Apps" "src"
+var names = listdir "Apps"
+if names
+  var i = 0
+  while i &lt; len names
+    print get names i
+    i = i + 1
+  end
+end
+exit</code></pre>
+        <h2>Errors</h2>
+        <p>On failure, check <code>errmsg</code>, or a return value of 0.</p>
+        <h2>GooberDOS shared folder</h2>
+        <p>Guest <code>C:\</code> maps to host <code>/Dos</code>. Copy files into <code>/Dos</code> or <code>/Dos/Apps</code>, then run them with a double-click, <code>rundos</code>, or <code>dos_run</code>. See <a href="dos.html">DOS</a>.</p>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Keys — GooberOS</title>
+  <link rel="icon" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="../index.html">GooberOS</a>
+    <nav>
+      <a href="../index.html">Overview</a>
+      <a href="../downloads.html">Download</a>
+      <a class="here" href="index.html">GooberC</a>
+    </nav>
+  </header>
+  <div class="desktop">
+    <article class="window">
+      <h1 class="titlebar">Keys</h1>
+      <div class="client">
+        <nav class="subnav">
+          <a href="index.html">Tour</a>
+          <a href="spec.html">Language</a>
+          <a href="console.html">Console</a>
+          <a href="gui.html">GUI</a>
+          <a href="fs.html">Files</a>
+          <a class="here" href="keys.html">Keys</a>
+          <a href="color.html">Colors</a>
+          <a href="dos.html">DOS</a>
+          <a href="auto.html">Auto</a>
+          <a href="gfx3d.html">3D</a>
+        </nav>
+        <p><code>KEY_*</code> names are integer literals. They match the codes from <code>getkey</code> and the keyboard driver. A variable with the same name wins over the built-in. This page follows <code>gooberc/libs/keys.md</code>.</p>
+
+        <h2>Special keys</h2>
+        <table>
+          <thead><tr><th>Name</th><th>Code</th></tr></thead>
+          <tbody>
+            <tr><td><code>KEY_ESC</code></td><td>27</td></tr>
+            <tr><td><code>KEY_ENTER</code></td><td>13</td></tr>
+            <tr><td><code>KEY_TAB</code></td><td>9</td></tr>
+            <tr><td><code>KEY_BACKSPACE</code></td><td>8</td></tr>
+            <tr><td><code>KEY_SPACE</code></td><td>32</td></tr>
+            <tr><td><code>KEY_UP</code> / <code>KEY_DOWN</code> / <code>KEY_LEFT</code> / <code>KEY_RIGHT</code></td><td>128–131</td></tr>
+            <tr><td><code>KEY_F1</code> … <code>KEY_F12</code></td><td><code>0x8B</code>–<code>0x96</code></td></tr>
+          </tbody>
+        </table>
+
+        <h2>Letters and digits</h2>
+        <p><code>KEY_A</code> through <code>KEY_Z</code> are the lowercase codes delivered when unshifted. <code>KEY_W</code> is 119, the same as <code>'w'</code>. <code>getkey</code> may return uppercase when Shift is held. <code>keyheld KEY_W</code> still reports held for either case.</p>
+        <p><code>KEY_0</code> through <code>KEY_9</code> are the digit character codes.</p>
+
+        <h2>Punctuation, unshifted</h2>
+        <table>
+          <thead><tr><th>Name</th><th>Character</th></tr></thead>
+          <tbody>
+            <tr><td><code>KEY_MINUS</code></td><td><code>-</code></td></tr>
+            <tr><td><code>KEY_EQUALS</code></td><td><code>=</code></td></tr>
+            <tr><td><code>KEY_LBRACKET</code> / <code>KEY_RBRACKET</code></td><td><code>[</code> <code>]</code></td></tr>
+            <tr><td><code>KEY_SEMICOLON</code></td><td><code>;</code></td></tr>
+            <tr><td><code>KEY_QUOTE</code></td><td><code>'</code></td></tr>
+            <tr><td><code>KEY_BACKTICK</code></td><td><code>`</code></td></tr>
+            <tr><td><code>KEY_BACKSLASH</code></td><td><code>\</code></td></tr>
+            <tr><td><code>KEY_COMMA</code> / <code>KEY_DOT</code> / <code>KEY_SLASH</code></td><td><code>,</code> <code>.</code> <code>/</code></td></tr>
+          </tbody>
+        </table>
+
+        <h2><code>getkey</code> and <code>keyheld</code></h2>
+        <ul>
+          <li><code>getkey</code> returns one pending press, or 0. It pumps a desktop frame.</li>
+          <li><code>keyheld k</code> is 1 if that code is currently down, on PS/2 or USB. It does not consume the press queue. Use it for WASD-style loops.</li>
+        </ul>
+        <pre><code>use goober.gui
+app gui
+
+window "Keys" 360x160
+while winclosed == 0
+  var k = getkey
+  if k == KEY_ESC
+    exit
+  end
+  fill NAVY
+  if keyheld KEY_W
+    label 16 40 "W held" LIME NAVY
+  end
+  if keyheld KEY_A
+    label 16 60 "A held" LIME NAVY
+  end
+  present
+  sleep 16
+end
+exit</code></pre>
+        <p>Named colors are on the <a href="color.html">Colors</a> page.</p>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

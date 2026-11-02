@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Colors — GooberOS</title>
+  <link rel="icon" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="../index.html">GooberOS</a>
+    <nav>
+      <a href="../index.html">Overview</a>
+      <a href="../downloads.html">Download</a>
+      <a class="here" href="index.html">GooberC</a>
+    </nav>
+  </header>
+  <div class="desktop">
+    <article class="window">
+      <h1 class="titlebar">Colors</h1>
+      <div class="client">
+        <nav class="subnav">
+          <a href="index.html">Tour</a>
+          <a href="spec.html">Language</a>
+          <a href="console.html">Console</a>
+          <a href="gui.html">GUI</a>
+          <a href="fs.html">Files</a>
+          <a href="keys.html">Keys</a>
+          <a class="here" href="color.html">Colors</a>
+          <a href="dos.html">DOS</a>
+          <a href="auto.html">Auto</a>
+          <a href="gfx3d.html">3D</a>
+        </nav>
+        <p>Color names are integer literals (<code>0xRRGGBB</code>). No <code>var</code> line is required. A variable with the same name wins over the built-in. Hex literals still work for a one-off shade. This page follows <code>gooberc/libs/color.md</code>.</p>
+        <div class="swatches">
+          <div class="swatch"><i class="chip" style="background:#000000"></i><span><code>BLACK</code> #000000</span></div>
+          <div class="swatch"><i class="chip" style="background:#FFFFFF"></i><span><code>WHITE</code> #FFFFFF</span></div>
+          <div class="swatch"><i class="chip" style="background:#808080"></i><span><code>GRAY</code> #808080</span></div>
+          <div class="swatch"><i class="chip" style="background:#C0C0C0"></i><span><code>SILVER</code> #C0C0C0</span></div>
+          <div class="swatch"><i class="chip" style="background:#D3D3D3"></i><span><code>LIGHTGRAY</code> #D3D3D3</span></div>
+          <div class="swatch"><i class="chip" style="background:#404040"></i><span><code>DARKGRAY</code> #404040</span></div>
+          <div class="swatch"><i class="chip" style="background:#E74C3C"></i><span><code>RED</code> #E74C3C</span></div>
+          <div class="swatch"><i class="chip" style="background:#8B0000"></i><span><code>DARKRED</code> #8B0000</span></div>
+          <div class="swatch"><i class="chip" style="background:#2ECC71"></i><span><code>GREEN</code> #2ECC71</span></div>
+          <div class="swatch"><i class="chip" style="background:#196F3D"></i><span><code>DARKGREEN</code> #196F3D</span></div>
+          <div class="swatch"><i class="chip" style="background:#4ADE80"></i><span><code>LIME</code> #4ADE80</span></div>
+          <div class="swatch"><i class="chip" style="background:#3498DB"></i><span><code>BLUE</code> #3498DB</span></div>
+          <div class="swatch"><i class="chip" style="background:#1A5276"></i><span><code>DARKBLUE</code> #1A5276</span></div>
+          <div class="swatch"><i class="chip" style="background:#1B2838"></i><span><code>NAVY</code> #1B2838</span></div>
+          <div class="swatch"><i class="chip" style="background:#87CEEB"></i><span><code>SKY</code> #87CEEB</span></div>
+          <div class="swatch"><i class="chip" style="background:#1ABC9C"></i><span><code>CYAN</code> #1ABC9C</span></div>
+          <div class="swatch"><i class="chip" style="background:#148F77"></i><span><code>TEAL</code> #148F77</span></div>
+          <div class="swatch"><i class="chip" style="background:#00FFFF"></i><span><code>AQUA</code> #00FFFF</span></div>
+          <div class="swatch"><i class="chip" style="background:#F1C40F"></i><span><code>YELLOW</code> #F1C40F</span></div>
+          <div class="swatch"><i class="chip" style="background:#FFD700"></i><span><code>GOLD</code> #FFD700</span></div>
+          <div class="swatch"><i class="chip" style="background:#E67E22"></i><span><code>ORANGE</code> #E67E22</span></div>
+          <div class="swatch"><i class="chip" style="background:#8B4513"></i><span><code>BROWN</code> #8B4513</span></div>
+          <div class="swatch"><i class="chip" style="background:#9B59B6"></i><span><code>PURPLE</code> #9B59B6</span></div>
+          <div class="swatch"><i class="chip" style="background:#6D28D9"></i><span><code>INDIGO</code> #6D28D9</span></div>
+          <div class="swatch"><i class="chip" style="background:#8E44AD"></i><span><code>VIOLET</code> #8E44AD</span></div>
+          <div class="swatch"><i class="chip" style="background:#FF00FF"></i><span><code>MAGENTA</code> #FF00FF</span></div>
+          <div class="swatch"><i class="chip" style="background:#FF69B4"></i><span><code>PINK</code> #FF69B4</span></div>
+          <div class="swatch"><i class="chip" style="background:#FF6B6B"></i><span><code>CORAL</code> #FF6B6B</span></div>
+          <div class="swatch"><i class="chip" style="background:#800000"></i><span><code>MAROON</code> #800000</span></div>
+          <div class="swatch"><i class="chip" style="background:#808000"></i><span><code>OLIVE</code> #808000</span></div>
+          <div class="swatch"><i class="chip" style="background:#243447"></i><span><code>PANEL</code> #243447</span></div>
+          <div class="swatch"><i class="chip" style="background:#EEF2F7"></i><span><code>INK</code> #EEF2F7</span></div>
+          <div class="swatch"><i class="chip" style="background:#9FB3C8"></i><span><code>MUTED</code> #9FB3C8</span></div>
+        </div>
+        <p><code>GREY</code> is the same value as <code>GRAY</code>.</p>
+        <h2>Example</h2>
+        <pre><code>use goober.gui
+app gui
+
+window "Demo" 320x180
+fill NAVY
+rect 16 16 120 40 PANEL
+label 24 28 "Hello" INK PANEL
+present
+while winclosed == 0
+  if getkey == KEY_ESC
+    exit
+  end
+  sleep 40
+end
+exit</code></pre>
+        <p>Key names are on the <a href="keys.html">Keys</a> page.</p>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

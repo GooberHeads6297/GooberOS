@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>goober.auto — GooberOS</title>
+  <link rel="icon" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="../index.html">GooberOS</a>
+    <nav>
+      <a href="../index.html">Overview</a>
+      <a href="../downloads.html">Download</a>
+      <a class="here" href="index.html">GooberC</a>
+    </nav>
+  </header>
+  <div class="desktop">
+    <article class="window">
+      <h1 class="titlebar">goober.auto</h1>
+      <div class="client">
+        <nav class="subnav">
+          <a href="index.html">Tour</a>
+          <a href="spec.html">Language</a>
+          <a href="console.html">Console</a>
+          <a href="gui.html">GUI</a>
+          <a href="fs.html">Files</a>
+          <a href="keys.html">Keys</a>
+          <a href="color.html">Colors</a>
+          <a href="dos.html">DOS</a>
+          <a class="here" href="auto.html">Auto</a>
+          <a href="gfx3d.html">3D</a>
+        </nav>
+        <p>Small helpers for timed scripts. This page follows <code>gooberc/libs/auto.md</code>.</p>
+        <pre><code>use goober.auto</code></pre>
+        <ul>
+          <li><code>sleep N</code> pauses for about <code>N</code> milliseconds. The stub yields desktop frames</li>
+          <li><code>print "..."</code> writes to the console, shared with <code>goober.console</code></li>
+          <li><code>exit</code> terminates the app</li>
+        </ul>
+        <p>Scheduling, event loops, and a richer automation language are still ahead. Keep scripts short. Long sleeps are clamped by the runtime stub.</p>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

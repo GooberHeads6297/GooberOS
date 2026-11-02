@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GooberC language — GooberOS</title>
+  <link rel="icon" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="../index.html">GooberOS</a>
+    <nav>
+      <a href="../index.html">Overview</a>
+      <a href="../downloads.html">Download</a>
+      <a class="here" href="index.html">GooberC</a>
+    </nav>
+  </header>
+  <div class="desktop">
+    <article class="window">
+      <h1 class="titlebar">GooberC language</h1>
+      <div class="client">
+        <nav class="subnav">
+          <a href="index.html">Tour</a>
+          <a class="here" href="spec.html">Language</a>
+          <a href="console.html">Console</a>
+          <a href="gui.html">GUI</a>
+          <a href="fs.html">Files</a>
+          <a href="keys.html">Keys</a>
+          <a href="color.html">Colors</a>
+          <a href="dos.html">DOS</a>
+          <a href="auto.html">Auto</a>
+          <a href="gfx3d.html">3D</a>
+        </nav>
+        <p>GooberC is a line-oriented language for GooberOS apps. Keywords, optional indentation, blocks closed with <code>end</code>, and very little punctuation. <code>.gob</code> version is <strong>2</strong>. Version 1 bytecode is rejected.</p>
+        <p class="muted">This page follows <code>gooberc/SPEC.md</code>.</p>
+
+        <h2>Source language</h2>
+        <table>
+          <thead><tr><th>Form</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>use goober.console</code> / <code>use goober.gui</code> / <code>use goober.fs</code></td><td>Module hint</td></tr>
+            <tr><td><code>use goober.auto</code> / <code>use goober.gfx3d</code></td><td>Automation / 3D stub modules</td></tr>
+            <tr><td><code>app console</code> / <code>app gui</code> / <code>app auto</code> / <code>app gfx3d</code></td><td>App kind</td></tr>
+            <tr><td><code>var name = &lt;expr&gt;</code></td><td>Declare and assign (global, or local inside <code>fn</code>)</td></tr>
+            <tr><td><code>name = &lt;expr&gt;</code></td><td>Assign</td></tr>
+            <tr><td><code>print "..."</code></td><td>Console write string</td></tr>
+            <tr><td><code>print &lt;expr&gt;</code></td><td>Print int or string, then a newline</td></tr>
+            <tr><td><code>if &lt;cond&gt;</code> … <code>end</code></td><td>Conditional</td></tr>
+            <tr><td><code>while &lt;cond&gt;</code> … <code>end</code></td><td>Loop</td></tr>
+            <tr><td><code>for name = a to b</code> … <code>end</code></td><td>Inclusive integer loop</td></tr>
+            <tr><td><code>break</code> / <code>continue</code></td><td>Loop control</td></tr>
+            <tr><td><code>fn name a b</code> … <code>end</code></td><td>Function with named arguments</td></tr>
+            <tr><td><code>call name args…</code></td><td>Call with zero or more arguments</td></tr>
+            <tr><td><code>return</code> / <code>return &lt;expr&gt;</code></td><td>Return, with an optional value</td></tr>
+            <tr><td><code>window "Title" WxH</code> / <code>text "..."</code> / <code>text expr</code> / <code>wait</code></td><td>GUI</td></tr>
+            <tr><td><code>cleargui</code> / <code>getkey</code> / <code>keyheld k</code> / <code>winclosed</code> / <code>str n</code></td><td>Interactive GUI</td></tr>
+            <tr><td><code>millis</code></td><td>Milliseconds since boot</td></tr>
+            <tr><td><code>if</code> / <code>else</code> / <code>end</code></td><td>Conditional with an optional else</td></tr>
+            <tr><td><code>sleep N</code> / <code>clear 0xRRGGBBAA</code></td><td>Sleep, or the gfx3d clear stub</td></tr>
+            <tr><td><code>exit</code></td><td>Terminate</td></tr>
+            <tr><td><code># comment</code></td><td>Comment</td></tr>
+            <tr><td><code>RED</code> / <code>NAVY</code> / <code>PANEL</code></td><td>Named colors. See <a href="color.html">Colors</a></td></tr>
+            <tr><td><code>KEY_UP</code> / <code>KEY_W</code> / <code>KEY_F1</code></td><td>Named keys. See <a href="keys.html">Keys</a></td></tr>
+          </tbody>
+        </table>
+
+        <h2>Values and builtins</h2>
+        <table>
+          <thead><tr><th>Kind</th><th>Forms</th></tr></thead>
+          <tbody>
+            <tr><td>int / bool</td><td>Literals. Comparisons produce 0 or 1</td></tr>
+            <tr><td>str</td><td><code>"..."</code>, <code>+</code> to join, <code>len</code>, <code>slice s a b</code>, <code>find hay needle</code></td></tr>
+            <tr><td>list</td><td><code>[1, 2, 3]</code>, <code>push</code> / <code>get</code> / <code>set</code> / <code>len</code>. Grows up to 256</td></tr>
+            <tr><td>map</td><td><code>map</code>, <code>set m "k" v</code>, <code>get m "k"</code>, <code>len</code>. At most 64 string keys</td></tr>
+            <tr><td>heap</td><td><code>alloc n</code> / <code>free p</code>. Blob handles, no pointer syntax</td></tr>
+            <tr><td>path</td><td><code>path_join a b</code>, <code>dirname p</code>, <code>basename p</code></td></tr>
+            <tr><td>fs</td><td><code>exists</code>, <code>read</code>, <code>write</code>, <code>listdir path</code></td></tr>
+            <tr><td>meta</td><td><code>typeof v</code> (0 int, 1 str, 2 list, 3 blob, 4 map), <code>errmsg</code></td></tr>
+          </tbody>
+        </table>
+        <p>Statement forms include <code>write path data</code>, <code>push list val</code>, and <code>set container key val</code>.</p>
+
+        <h2>Expressions</h2>
+        <p>Integers, names, string and list literals, <code>+ - * /</code>, parentheses, and comparisons <code>== != &lt; &lt;= &gt; &gt;=</code>. Globals are limited to 128. Each frame has at most 32 locals.</p>
+        <pre><code>use goober.console
+use goober.fs
+
+fn greet name
+  print "hi "
+  print name
+end
+
+var n = 3
+while n &gt; 0
+  call greet "tick"
+  n = n - 1
+end
+
+var data = read "Config/settings.cfg"
+if data
+  print len data
+end
+exit</code></pre>
+
+        <h2>Left out on purpose</h2>
+        <p>C types, braces, semicolons, <code>-&gt;</code>, headers, <code>int main(void)</code>, and pointer arithmetic are not part of the language.</p>
+
+        <h2>GooberDOS</h2>
+        <table>
+          <thead><tr><th>Item</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Soft 8086 guest</td><td><code>dosemu/</code> in the source tree</td></tr>
+            <tr><td>Shared folder</td><td>Guest <code>C:\</code> is host <code>/Dos</code></td></tr>
+            <tr><td>Launch</td><td>Explorer, <code>rundos</code>, or <code>dos_run path</code></td></tr>
+          </tbody>
+        </table>
+        <p>See <a href="dos.html">DOS</a>.</p>
+
+        <h2><code>.gob</code> file format</h2>
+        <table>
+          <thead><tr><th>Offset</th><th>Size</th><th>Field</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>4</td><td>magic <code>GOB\0</code> (<code>0x00424F47</code> little-endian)</td></tr>
+            <tr><td>4</td><td>2</td><td>version = 2</td></tr>
+            <tr><td>6</td><td>1</td><td>arch (1 = i386, 2 = x86_64)</td></tr>
+            <tr><td>7</td><td>1</td><td>kind (1 = console, 2 = gui, 3 = auto, 4 = gfx3d)</td></tr>
+            <tr><td>8</td><td>4</td><td>flags (bit 0 = bytecode)</td></tr>
+            <tr><td>12</td><td>4</td><td>entry (bytecode IP)</td></tr>
+            <tr><td>16</td><td>4</td><td>code_size</td></tr>
+            <tr><td>20</td><td>4</td><td>rodata_size</td></tr>
+            <tr><td>24</td><td>4</td><td>reserved</td></tr>
+            <tr><td>28</td><td>…</td><td>code, then rodata</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Bytecode opcodes</h2>
+        <table>
+          <thead><tr><th>Op</th><th>Encoding</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>0–9</td><td>v1</td><td>NOP, EXIT, WRITE, YIELD, GUI_*, SLEEP_MS, GFX3D_CLEAR</td></tr>
+            <tr><td>10 PUSH_I</td><td>i32</td><td>Push integer</td></tr>
+            <tr><td>11 LOAD / 12 STORE</td><td>u8</td><td>Global</td></tr>
+            <tr><td>13–16</td><td></td><td>ADD SUB MUL DIV. ADD also joins strings</td></tr>
+            <tr><td>17–22 CMP_*</td><td></td><td>Comparisons</td></tr>
+            <tr><td>23 JMP / 24 JZ</td><td>u32 IP</td><td>Control</td></tr>
+            <tr><td>25 CALL</td><td>u32 IP</td><td>Call with no arguments</td></tr>
+            <tr><td>26 RET</td><td></td><td>Return</td></tr>
+            <tr><td>27 PRINT_I</td><td></td><td>Print int or string, plus a newline</td></tr>
+            <tr><td>28 LOAD_LOCAL / 29 STORE_LOCAL</td><td>u8</td><td>Frame locals</td></tr>
+            <tr><td>30 CALL_N</td><td>u32 IP, u8 arity</td><td>Call with arguments</td></tr>
+            <tr><td>31 RET_V</td><td></td><td>Return with a stack value</td></tr>
+            <tr><td>32 PUSH_STR</td><td>u32 off</td><td>Push a string from rodata</td></tr>
+            <tr><td>33 LEN</td><td></td><td>String or list length</td></tr>
+            <tr><td>34 LIST_NEW</td><td>u8 n</td><td>Pop n ints into a list</td></tr>
+            <tr><td>35 LIST_PUSH / 36 LIST_GET</td><td></td><td>List mutate / index</td></tr>
+            <tr><td>37 ALLOC / 38 FREE</td><td></td><td>Heap blob</td></tr>
+            <tr><td>39–41 FS_*</td><td></td><td>exists, read, write</td></tr>
+            <tr><td>42 STR_JOIN</td><td></td><td>Concatenate strings</td></tr>
+            <tr><td>43 DUP / 44 POP</td><td></td><td>Stack helpers</td></tr>
+            <tr><td>45 PRINT_RAW</td><td></td><td>Print a string, no newline</td></tr>
+            <tr><td>46 STR_SLICE</td><td></td><td>end, start, str → substring</td></tr>
+            <tr><td>47 STR_FIND</td><td></td><td>needle, hay → index or -1</td></tr>
+            <tr><td>48 PATH_JOIN</td><td></td><td>b, a → joined path</td></tr>
+            <tr><td>49 PATH_DIR / 50 PATH_BASE</td><td></td><td>dirname / basename</td></tr>
+            <tr><td>51 FS_LIST</td><td></td><td>path → list of names</td></tr>
+            <tr><td>52 SET</td><td></td><td>val, key or index, list or map</td></tr>
+            <tr><td>53 TYPEOF</td><td></td><td>Type code</td></tr>
+            <tr><td>54 LAST_ERR</td><td></td><td>Last runtime error string</td></tr>
+            <tr><td>55 MAP_NEW</td><td></td><td>Empty map</td></tr>
+            <tr><td>56 DOS_RUN</td><td></td><td>path → launch GooberDOS (0 or 1)</td></tr>
+            <tr><td>57 KEY_POLL</td><td></td><td>Push a key, or 0. Pumps a frame</td></tr>
+            <tr><td>58 GUI_CLEAR</td><td></td><td>Clear window lines</td></tr>
+            <tr><td>59 GUI_TEXT_S</td><td></td><td>Pop a string and append a line</td></tr>
+            <tr><td>60 STR_I</td><td></td><td>Pop an int, push a decimal string</td></tr>
+            <tr><td>61 GUI_CLOSED</td><td></td><td>Push 1 if the window was closed</td></tr>
+            <tr><td>62 GFX_FILL</td><td></td><td>Pop rgb, clear the canvas</td></tr>
+            <tr><td>63 GFX_RECT</td><td></td><td>Pop rgb, h, w, y, x → filled rectangle</td></tr>
+            <tr><td>64 GFX_LABEL</td><td></td><td>Pop bg, fg, str, y, x → text</td></tr>
+            <tr><td>65 GFX_PRESENT</td><td></td><td>Mark the canvas window dirty</td></tr>
+            <tr><td>66 NUM</td><td></td><td>Pop a string, parse a decimal int</td></tr>
+            <tr><td>67 MILLIS</td><td></td><td>Push milliseconds since boot</td></tr>
+            <tr><td>68 KEY_HELD</td><td></td><td>Pop a key, push 1 if it is held</td></tr>
+          </tbody>
+        </table>
+        <p>Surface words <code>fill</code>, <code>rect</code>, <code>label</code>, <code>present</code>, <code>num</code>, <code>millis</code>, and <code>keyheld</code> compile to those opcodes. Hex literals (<code>0xRRGGBB</code>) are accepted. Call arguments bind so <code>mod x 10 == 9</code> means <code>(mod x 10) == 9</code>.</p>
+        <p>The virtual machine has an operand stack of 128, 128 globals, 64 frames with 32 locals, and an object table with about 128 KB of heap. Lists grow to at most 256. Object handles set bit 31. Runtime errors set <code>errmsg</code>. A version mismatch says which version was expected.</p>
+
+        <h2>Syscall ABI (<code>int 0x80</code>)</h2>
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Args</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>EXIT</td><td>code</td></tr>
+            <tr><td>2</td><td>WRITE</td><td>fd, buf, len</td></tr>
+            <tr><td>3</td><td>YIELD</td><td></td></tr>
+            <tr><td>4–6</td><td>OPEN / CLOSE / READ</td><td>path / fd / buf</td></tr>
+            <tr><td>20–23</td><td>GUI_WIN_*</td><td>window ops</td></tr>
+          </tbody>
+        </table>
+        <p>Bytecode apps use the in-kernel virtual machine. Native ring-3 and <code>int 0x80</code> remain for later backends.</p>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

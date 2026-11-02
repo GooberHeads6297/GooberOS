@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Downloads — GooberOS</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="index.html">GooberOS</a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a class="here" href="downloads.html">Download</a>
+      <a href="gooberc/index.html">GooberC</a>
+    </nav>
+  </header>
+  <div class="desktop">
+    <article class="window">
+      <h1 class="titlebar">Downloads</h1>
+      <div class="client">
+        <p class="lead">These links save the latest ISO from the <a href="https://github.com/GooberHeads6297/GooberOS-Binaries">GooberOS-Binaries</a> repository. The file downloads in place. (Older versions will be implemented momentarily.)</p>
+
+        <div class="downloads">
+          <a class="dl" href="https://github.com/GooberHeads6297/GooberOS-Binaries/releases/latest/download/GooberOSx86-x64.iso">
+            <span class="dl-name">GooberOSx86-x64.iso</span>
+            <span class="dl-meta">64-bit. Use this on current PCs.</span>
+          </a>
+          <a class="dl" href="https://github.com/GooberHeads6297/GooberOS-Binaries/releases/latest/download/GooberOSx86.iso">
+            <span class="dl-name">GooberOSx86.iso</span>
+            <span class="dl-meta">32-bit. Use this on older machines.</span>
+          </a>
+        </div>
+
+        <h2>Boot it</h2>
+        <p>Write the ISO to a USB drive, or attach it as a virtual optical drive. It boots on BIOS and UEFI. From the live desktop, open the installer, or use the shell:</p>
+        <pre><code>install list
+install fat32 &lt;target-id&gt; YES GPT</code></pre>
+        <p><code>YES GPT</code> is for UEFI. Use <code>YES MBR</code> for a legacy BIOS disk. Then reboot from that disk.</p>
+      </div>
+    </article>
+  </div>
+</body>
+</html>
