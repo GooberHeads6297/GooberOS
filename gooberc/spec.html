@@ -40,7 +40,7 @@
           <thead><tr><th>Form</th><th>Meaning</th></tr></thead>
           <tbody>
             <tr><td><code>use goober.console</code> / <code>use goober.gui</code> / <code>use goober.fs</code></td><td>Module hint</td></tr>
-            <tr><td><code>use goober.auto</code> / <code>use goober.gfx3d</code></td><td>Automation / 3D stub modules</td></tr>
+            <tr><td><code>use goober.auto</code> / <code>use goober.gfx3d</code></td><td>Automation / software 3D modules</td></tr>
             <tr><td><code>app console</code> / <code>app gui</code> / <code>app auto</code> / <code>app gfx3d</code></td><td>App kind</td></tr>
             <tr><td><code>var name = &lt;expr&gt;</code></td><td>Declare and assign (global, or local inside <code>fn</code>)</td></tr>
             <tr><td><code>name = &lt;expr&gt;</code></td><td>Assign</td></tr>
@@ -57,7 +57,9 @@
             <tr><td><code>cleargui</code> / <code>getkey</code> / <code>keyheld k</code> / <code>winclosed</code> / <code>str n</code></td><td>Interactive GUI</td></tr>
             <tr><td><code>millis</code></td><td>Milliseconds since boot</td></tr>
             <tr><td><code>if</code> / <code>else</code> / <code>end</code></td><td>Conditional with an optional else</td></tr>
-            <tr><td><code>sleep N</code> / <code>clear 0xRRGGBBAA</code></td><td>Sleep, or the gfx3d clear stub</td></tr>
+            <tr><td><code>sleep N</code> / <code>clear 0xRRGGBBAA</code></td><td>Sleep, or clear the canvas and 3D scene</td></tr>
+            <tr><td><code>camera3d</code> / <code>move3d</code> / <code>turn3d</code> / <code>cube3d</code> / …</td><td>3D camera, transforms, and shapes. See <a href="gfx3d.html">3D</a></td></tr>
+            <tr><td><code>clicked</code> / <code>mousex</code> / <code>mousey</code></td><td>Click in the window since the last read, and its client x, y</td></tr>
             <tr><td><code>exit</code></td><td>Terminate</td></tr>
             <tr><td><code># comment</code></td><td>Comment</td></tr>
             <tr><td><code>RED</code> / <code>NAVY</code> / <code>PANEL</code></td><td>Named colors. See <a href="color.html">Colors</a></td></tr>
@@ -77,6 +79,7 @@
             <tr><td>path</td><td><code>path_join a b</code>, <code>dirname p</code>, <code>basename p</code></td></tr>
             <tr><td>fs</td><td><code>exists</code>, <code>read</code>, <code>write</code>, <code>listdir path</code></td></tr>
             <tr><td>meta</td><td><code>typeof v</code> (0 int, 1 str, 2 list, 3 blob, 4 map), <code>errmsg</code></td></tr>
+            <tr><td>math</td><td><code>sin deg</code> / <code>cos deg</code> (times 1024), <code>projx x y z</code> / <code>projy x y z</code> (3D point to window)</td></tr>
           </tbody>
         </table>
         <p>Statement forms include <code>write path data</code>, <code>push list val</code>, and <code>set container key val</code>.</p>
@@ -138,7 +141,7 @@ exit</code></pre>
         <table>
           <thead><tr><th>Op</th><th>Encoding</th><th>Action</th></tr></thead>
           <tbody>
-            <tr><td>0–9</td><td>v1</td><td>NOP, EXIT, WRITE, YIELD, GUI_*, SLEEP_MS, GFX3D_CLEAR</td></tr>
+            <tr><td>0–9</td><td>v1</td><td>NOP, EXIT, WRITE, YIELD, GUI_*, SLEEP_MS, GFX3D_CLEAR (u32 rgba, clears the canvas and scene)</td></tr>
             <tr><td>10 PUSH_I</td><td>i32</td><td>Push integer</td></tr>
             <tr><td>11 LOAD / 12 STORE</td><td>u8</td><td>Global</td></tr>
             <tr><td>13–16</td><td></td><td>ADD SUB MUL DIV. ADD also joins strings</td></tr>
@@ -177,14 +180,30 @@ exit</code></pre>
             <tr><td>62 GFX_FILL</td><td></td><td>Pop rgb, clear the canvas</td></tr>
             <tr><td>63 GFX_RECT</td><td></td><td>Pop rgb, h, w, y, x → filled rectangle</td></tr>
             <tr><td>64 GFX_LABEL</td><td></td><td>Pop bg, fg, str, y, x → text</td></tr>
-            <tr><td>65 GFX_PRESENT</td><td></td><td>Mark the canvas window dirty</td></tr>
+            <tr><td>65 GFX_PRESENT</td><td></td><td>Publish the drawn frame to the window</td></tr>
             <tr><td>66 NUM</td><td></td><td>Pop a string, parse a decimal int</td></tr>
             <tr><td>67 MILLIS</td><td></td><td>Push milliseconds since boot</td></tr>
             <tr><td>68 KEY_HELD</td><td></td><td>Pop a key, push 1 if it is held</td></tr>
+            <tr><td>69 CLICK_POLL</td><td></td><td>Push 1 if a click is waiting, then clear it</td></tr>
+            <tr><td>70 MOUSE_X / 71 MOUSE_Y</td><td></td><td>Push the client x / y of the last click</td></tr>
+            <tr><td>72 G3_CAMERA</td><td></td><td>Pop pitch, yaw, z, y, x → camera pose</td></tr>
+            <tr><td>73 G3_FOV</td><td></td><td>Pop degrees → field of view (10–170)</td></tr>
+            <tr><td>74 G3_LIGHT</td><td></td><td>Pop ambient %, z, y, x → light direction</td></tr>
+            <tr><td>75 G3_RESET</td><td></td><td>Model transform becomes identity</td></tr>
+            <tr><td>76 G3_MOVE / 77 G3_TURN / 78 G3_SCALE</td><td></td><td>Pop 3 → translate / rotate (degrees) / scale (%)</td></tr>
+            <tr><td>79 G3_PUSH / 80 G3_POP</td><td></td><td>Save / restore the model transform (8 deep)</td></tr>
+            <tr><td>81 G3_WIRE</td><td></td><td>Pop a flag → outlines only when 1</td></tr>
+            <tr><td>82 G3_TRI</td><td></td><td>Pop rgb and 9 coordinates → two-sided triangle</td></tr>
+            <tr><td>83 G3_LINE</td><td></td><td>Pop rgb and 6 coordinates → 3D line</td></tr>
+            <tr><td>84 G3_CUBE / 85 G3_PYRAMID / 86 G3_PLANE</td><td></td><td>Pop rgb, size → primitive</td></tr>
+            <tr><td>87 G3_GRID</td><td></td><td>Pop rgb, cells, size → XZ wire grid</td></tr>
+            <tr><td>88 G3_PROJX / 89 G3_PROJY</td><td></td><td>Pop z, y, x → window x / y (−1 behind the camera)</td></tr>
+            <tr><td>90 SIN / 91 COS</td><td></td><td>Pop degrees → value times 1024</td></tr>
           </tbody>
         </table>
-        <p>Surface words <code>fill</code>, <code>rect</code>, <code>label</code>, <code>present</code>, <code>num</code>, <code>millis</code>, and <code>keyheld</code> compile to those opcodes. Hex literals (<code>0xRRGGBB</code>) are accepted. Call arguments bind so <code>mod x 10 == 9</code> means <code>(mod x 10) == 9</code>.</p>
-        <p>The virtual machine has an operand stack of 128, 128 globals, 64 frames with 32 locals, and an object table with about 128 KB of heap. Lists grow to at most 256. Object handles set bit 31. Runtime errors set <code>errmsg</code>. A version mismatch says which version was expected.</p>
+        <p>Surface words <code>fill</code>, <code>rect</code>, <code>label</code>, <code>present</code>, <code>num</code>, <code>millis</code>, and <code>keyheld</code> compile to those opcodes, as do the 3D words on the <a href="gfx3d.html">3D</a> page. Hex literals (<code>0xRRGGBB</code>) are accepted. Call arguments bind so <code>mod x 10 == 9</code> means <code>(mod x 10) == 9</code>. Statement arguments are full expressions, so write a negative argument as <code>(0 - n)</code>.</p>
+        <p>The virtual machine has an operand stack of 128, 128 globals, 64 frames with 32 locals, and an object table with about 128 KB of heap. Lists grow to at most 256. Object handles set bit 31. A value only counts as an object when it names a live one, so negative ints add and print normally. Runtime errors set <code>errmsg</code>. A version mismatch says which version was expected.</p>
+        <p>GUI windows are double-buffered. Drawing edits a back frame that <code>present</code>, or the next <code>getkey</code>, <code>sleep</code>, or <code>wait</code>, publishes. The VM also services the desktop from loop back-edges and from <code>winclosed</code>, <code>clicked</code>, and <code>keyheld</code> about every 16 ms, so the pointer stays live in any loop.</p>
 
         <h2>Syscall ABI (<code>int 0x80</code>)</h2>
         <table>

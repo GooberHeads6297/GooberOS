@@ -32,20 +32,94 @@
           <a href="auto.html">Auto</a>
           <a class="here" href="gfx3d.html">3D</a>
         </nav>
-        <p>Reserved 3D and canvas module. The opcodes compile today. Drawing is still a stub. This page follows <code>gooberc/libs/gfx3d.md</code>.</p>
-        <pre><code>use goober.gfx3d</code></pre>
+        <p>Software 3D for GooberC windows: a camera, model transforms, flat-shaded solids, wireframes, and simple shapes. It uses integer math only, with no FPU. The scene draws onto the same canvas as <code>fill</code>, <code>rect</code>, and <code>label</code>, so 2D text mixes with 3D. This page follows <code>gooberc/libs/gfx3d.md</code>.</p>
+        <pre><code>use goober.gfx3d
+app gfx3d
+window "Spin" 480x400</code></pre>
+        <p>A window is required. Drawing goes to the most recent <code>window</code>.</p>
+
+        <h2>Coordinates</h2>
         <ul>
-          <li><code>clear 0xRRGGBBAA</code> is reserved to clear a canvas. It does not draw yet</li>
-          <li><code>print "..."</code> can leave a console note while you prototype</li>
-          <li><code>exit</code> terminates</li>
+          <li>World units are plain integers. <code>x</code> points right, <code>y</code> up, and <code>z</code> away from the default camera</li>
+          <li>Angles are whole degrees. <code>scale3d</code> takes percentages, so 100 is 1x</li>
+          <li>GooberC reads <code>move3d 0 -50 0</code> as <code>0 - 50 0</code>. Write a negative argument as <code>(0 - 50)</code> or keep it in a variable</li>
         </ul>
-        <h2>Planned</h2>
+
+        <h2>Frame loop</h2>
         <ul>
-          <li>Create a canvas and present a frame</li>
-          <li>Mesh and camera helpers</li>
-          <li>A software or GPU raster path</li>
+          <li><code>fill color</code> or <code>clear 0xRRGGBBAA</code> starts a frame. Both clear the 2D draw list and the 3D scene. <code>clear</code> ignores the alpha byte</li>
+          <li>Draw the 3D shapes, then any <code>rect</code> or <code>label</code> on top</li>
+          <li><code>present</code> shows the finished frame. The window never shows half a frame. If you skip <code>present</code>, the frame appears at the next <code>getkey</code>, <code>sleep</code>, or <code>wait</code></li>
         </ul>
-        <p>Use <code>use goober.gfx3d</code> and <code>clear</code> so samples stay forward-compatible. Do not assume pixels are drawn yet. Two-dimensional windows use <a href="gui.html">goober.gui</a>.</p>
+        <p>2D commands issued before the first 3D shape of a frame draw behind the scene. Commands issued after it draw on top.</p>
+
+        <h2>Camera and light</h2>
+        <table>
+          <thead><tr><th>Form</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>camera3d x y z yaw pitch</code></td><td>Place the camera. At yaw 0 and pitch 0 it looks toward +z. Positive yaw turns right, positive pitch looks up. Default <code>camera3d 0 0 (0 - 300) 0 0</code></td></tr>
+            <tr><td><code>fov3d deg</code></td><td>Horizontal field of view, 10–170. Default 60</td></tr>
+            <tr><td><code>light3d x y z ambient</code></td><td>Direction toward the light, and the ambient level in percent. Default <code>light3d (0 - 40) 70 (0 - 60) 30</code></td></tr>
+          </tbody>
+        </table>
+
+        <h2>Model transform</h2>
+        <p>Each call changes the current transform. The last call applies to vertices first, the same order OpenGL uses: <code>move3d</code> and then <code>turn3d</code> spins a shape in place at its new position.</p>
+        <table>
+          <thead><tr><th>Form</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>reset3d</code></td><td>Back to identity</td></tr>
+            <tr><td><code>move3d x y z</code></td><td>Translate</td></tr>
+            <tr><td><code>turn3d ax ay az</code></td><td>Rotate about X, then Y, then Z, in degrees</td></tr>
+            <tr><td><code>scale3d sx sy sz</code></td><td>Scale by percentages</td></tr>
+            <tr><td><code>push3d</code> / <code>pop3d</code></td><td>Save and restore the transform, 8 levels deep</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Shapes</h2>
+        <p>Every shape is centered on the current model origin.</p>
+        <table>
+          <thead><tr><th>Form</th><th>Draws</th></tr></thead>
+          <tbody>
+            <tr><td><code>cube3d size color</code></td><td>A solid cube with edge <code>size</code></td></tr>
+            <tr><td><code>pyramid3d size color</code></td><td>A square pyramid, <code>size</code> wide and tall</td></tr>
+            <tr><td><code>plane3d size color</code></td><td>A two-sided square in the XZ plane at <code>y = 0</code></td></tr>
+            <tr><td><code>grid3d size cells color</code></td><td>A wireframe floor grid in the XZ plane</td></tr>
+            <tr><td><code>tri3d x1 y1 z1 x2 y2 z2 x3 y3 z3 color</code></td><td>A two-sided triangle</td></tr>
+            <tr><td><code>line3d x1 y1 z1 x2 y2 z2 color</code></td><td>A 3D line</td></tr>
+            <tr><td><code>wire3d on</code></td><td><code>1</code> draws shapes as outlines. <code>0</code> goes back to solid shading</td></tr>
+          </tbody>
+        </table>
+        <p>Solid faces are flat-shaded from <code>light3d</code>. Cubes and pyramids skip their back faces. Depth uses the painter's algorithm: each frame's faces are sorted far to near before drawing. That is exact for separate convex shapes, but large faces that cross each other can sort wrong. Faces behind the camera are clipped at the near plane. A frame holds up to 1024 triangles and lines.</p>
+
+        <h2>Math helpers</h2>
+        <ul>
+          <li><code>sin deg</code> and <code>cos deg</code> return the value times 1024, so <code>sin 30</code> is <code>512</code>. Multiply first, then divide: <code>r * (cos a) / 1024</code></li>
+          <li><code>projx x y z</code> and <code>projy x y z</code> return the window position of a model-space point, or <code>-1</code> if it is behind the camera. Use them to place a <code>label</code> next to a 3D object</li>
+        </ul>
+        <p>A variable or <code>fn</code> you define with one of these names wins over the builtin. Wrap a builtin call in parentheses when more math follows it, as in <code>(sin a) * r / 1024</code>.</p>
+
+        <h2>Example</h2>
+        <pre><code>use goober.gfx3d
+app gfx3d
+window "Spin" 480x400
+var a = 0
+while winclosed == 0
+  fill NAVY
+  camera3d 0 120 (0 - 360) 0 (0 - 18)
+  reset3d
+  push3d
+  move3d 0 (0 - 80) 0
+  grid3d 600 10 DARKGRAY
+  pop3d
+  turn3d a a / 2 0
+  cube3d 120 ORANGE
+  label 8 8 "angle " + str a INK NAVY
+  present
+  a = a + 3
+  sleep 16
+end</code></pre>
+        <p>The full demo is <code>gooberc/examples/Cube3D.gc</code>. It installs as <code>Apps/Cube3D.gob</code>, with its source in <code>Apps/src/Cube3D.gc</code>. Hold the arrow keys to orbit, press W for wireframe, and press Space or click to pause. Flat 2D windows use <a href="gui.html">goober.gui</a>.</p>
       </div>
     </article>
   </div>

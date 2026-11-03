@@ -50,7 +50,7 @@ app gui</code></pre>
           <li><code>fill color</code> clears the canvas and sets the background</li>
           <li><code>rect x y w h color</code> draws a filled rectangle in client coordinates</li>
           <li><code>label x y str fg bg</code> draws a string at <code>(x, y)</code></li>
-          <li><code>present</code> marks the window dirty. Call it after a frame’s draw list</li>
+          <li><code>present</code> shows the frame you just drew. Call it after a frame’s draw list. Drawing goes to a back buffer, so the window never shows half a frame. If you skip <code>present</code>, the frame appears at the next <code>getkey</code>, <code>sleep</code>, or <code>wait</code></li>
         </ul>
         <pre><code>fill NAVY
 rect 8 8 200 24 PANEL
@@ -62,7 +62,7 @@ present</code></pre>
         <ul>
           <li><code>getkey</code> polls one key (0 if none) and pumps a desktop frame</li>
           <li><code>keyheld k</code> is 1 if that key is currently held. It does not consume the queue</li>
-          <li><code>clicked</code> is 1 if the user clicked the window since the last read. Read it after <code>getkey</code> or <code>sleep</code></li>
+          <li><code>clicked</code> is 1 if the user clicked the window since the last read. Clicks arrive while the app pumps the desktop: in <code>getkey</code>, in <code>sleep</code>, and about every 16 ms inside any loop</li>
           <li><code>mousex</code> / <code>mousey</code> are the client coordinates of that click</li>
           <li><code>millis</code> is milliseconds since boot</li>
           <li><code>winclosed</code> is 1 if the window was closed</li>
