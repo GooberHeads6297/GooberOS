@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Documentation — GooberOS</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="index.html">GooberOS</a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a href="downloads.html">Download</a>
+      <a class="here" href="documentation.html">Documentation</a>
+      <a href="gooberc/index.html">GooberC</a>
+    </nav>
+  </header>
+  <div class="desktop">
+    <article class="window">
+      <h1 class="titlebar">Documentation</h1>
+      <div class="client">
+        <nav class="subnav">
+          <a href="#choose">Choose a volume</a>
+          <a href="#compare">FAT32 and GooberFS</a>
+          <a href="#works">How GooberFS works</a>
+          <a href="#use">What you can do</a>
+          <a href="#limits">Limitations</a>
+        </nav>
+
+        <p class="lead">GooberOS keeps your files on the system volume, <code>Z:</code>. The live ISO holds them in memory. An install writes them to a disk, and you choose FAT32 or GooberFS for that disk.</p>
+
+        <figure class="media focus">
+          <div class="media-slot">
+            <img src="assets/FileSystemLimitations.png" alt="The desktop shows FolderJimBobTheForth. The text editor has a saved note, and File Explorer is open at Z:/Desktop/FolderJimBobTheForth.">
+          </div>
+          <figcaption>A folder on the desktop, a saved note, and that folder open in File Explorer</figcaption>
+        </figure>
+        <p>The picture is a GooberFS system volume. <code>FolderJimBobTheForth</code> sits on the desktop and under <code>Z:/Desktop</code>. The text editor saved a file in that folder. <code>Y:</code> is the other volume on the same disk, the FAT32 partition that holds the boot files.</p>
+
+        <h2 id="choose">Choose a volume</h2>
+        <p>Boot the ISO and open the installer. Pick the disk, then the partition style, then the system volume.</p>
+        <ul>
+          <li><strong>MBR (BIOS)</strong> for a legacy machine. <strong>GPT (UEFI)</strong> for a current PC. GPT is the default.</li>
+          <li><strong>FAT32</strong> is the default system volume. Boot files and your files share one partition. The confirm page says <code>System: FAT32</code>.</li>
+          <li><strong>GooberFS</strong> keeps a 36 MiB FAT32 boot partition, because the boot loader reads FAT32, and puts Desktop, Apps, Dos, Config, and the rest of your files on the remaining space. The confirm page says <code>System: GooberFS</code>. On the style page, <kbd>F</kbd> selects FAT32 and <kbd>B</kbd> selects GooberFS.</li>
+        </ul>
+        <p>The disk needs room for that 36 MiB boot image. A GooberFS install also needs at least 8 MiB after it. A 2 GB disk is enough. Confirming the install erases the whole target disk. When it finishes, reboot from that disk.</p>
+        <p>After a GooberFS install, Disk Manager labels the first volume <strong>FAT32</strong> and the second volume <strong>GooberFS</strong>. The partitioning line still says GUID Partition Table when you chose GPT. <code>Z:</code> is the system volume. The FAT32 boot partition shows up as another letter, such as <code>Y:</code>.</p>
+        <p>Pick FAT32 when you want one volume that other computers can read, or when you want the boot files and your files in the same place. Pick GooberFS when this disk is for GooberOS and you want case-sensitive names and a volume made for the system. The installer copies the same desktop, apps, and DOS programs onto either choice.</p>
+
+        <h2 id="compare">FAT32 and GooberFS</h2>
+        <table>
+          <thead>
+            <tr><th></th><th>FAT32</th><th>GooberFS</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Where it lives</td>
+              <td>One partition for boot and files.</td>
+              <td>Your files are on GooberFS. A 36 MiB FAT32 partition stays for boot.</td>
+            </tr>
+            <tr>
+              <td>Who can read it</td>
+              <td>GooberOS, and the usual tools on Windows, Linux, and a USB stick.</td>
+              <td>GooberOS reads the file volume. Other systems read the FAT32 boot partition.</td>
+            </tr>
+            <tr>
+              <td>Names</td>
+              <td><code>Desktop</code> and <code>desktop</code> are the same file. The desktop keeps 31 characters of a name.</td>
+              <td>Names are case-sensitive and at most 31 characters. <code>Notes</code> and <code>notes</code> are two files.</td>
+            </tr>
+            <tr>
+              <td>A folder</td>
+              <td>The desktop lists 32 files and 16 folders at the root, and 24 files and 12 folders inside a folder.</td>
+              <td>The same listing counts, and the volume itself stores at most 113 names in one folder.</td>
+            </tr>
+            <tr>
+              <td>A file</td>
+              <td>Up to 4 GiB, minus one byte, which is the FAT32 size limit.</td>
+              <td>Up to 4 GiB, minus one byte. One save is stored as at most 32 stretches of disk.</td>
+            </tr>
+            <tr>
+              <td>The whole disk</td>
+              <td>FAT32 can hold a large tree. This desktop still stops at the listing counts above.</td>
+              <td>128 slots on a small disk and 2,048 on a large one. Two are reserved, so the volume holds 126 to 2,046 files and folders.</td>
+            </tr>
+            <tr>
+              <td>What an install writes</td>
+              <td>The boot loader, kernel, Desktop, Apps, Dos, Config, home, tmp, lib, and usr.</td>
+              <td>The same tree. <code>boot</code> and <code>EFI</code> stay on the FAT32 partition. Everything else is copied to GooberFS.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="works">How GooberFS works</h2>
+        <p>A GooberFS volume is a row of 4096-byte blocks. The first block is an anchor. It names the volume and records where free space begins. Disk Manager reads that block and labels the volume GooberFS.</p>
+        <p>Each file and each folder has one record in a table near the start of the volume. The record says whether it is a file or a folder, how big it is, and which blocks hold the bytes. A fresh install hands out those blocks from a cursor, so formatting does not walk every block on the disk. Deleting a file returns its blocks to a free list, and a later save can reuse them.</p>
+        <p>A folder is stored as a file whose bytes are fixed 36-byte records: a name of up to 31 characters, and the record it points to. A new volume starts with <code>Desktop</code> and <code>Config</code>. The installer then copies the userspace tree onto it. Saving a file replaces that file’s bytes. Tab completion in the shell matches the name in the case you typed, and a folder is completed with a trailing slash so the next Tab continues inside it.</p>
+        <p>There is no owner, permission, or recorded timestamp on a file. A crash while a save is being written can drop that save. The previous copy of the file stays. There is no repair command for space left behind by a crash.</p>
+
+        <h2 id="use">What you can do</h2>
+        <p>On the installed system, <code>Z:</code> is the volume you chose. File Explorer opens it from the drive list. <kbd>N</kbd> makes a folder, <kbd>T</kbd> makes a text file, Enter opens the selection, and Backspace goes up. Anything you put in <code>Desktop</code> shows on the desktop, which is the folder in the picture.</p>
+        <p>The text editor saves with <kbd>F2</kbd>. The status line in the picture reads <code>F2=save saved</code> after the note was written into <code>FolderJimBobTheForth</code>.</p>
+        <p>The shell uses the same folders. These commands work on FAT32 and on GooberFS:</p>
+        <pre><code>ls
+cd Desktop
+mkdir FolderJimBobTheForth
+new note.txt
+write note.txt hello
+read note.txt
+rename note.txt done.txt
+del done.txt
+rmdir FolderJimBobTheForth</code></pre>
+        <p><code>rmdir</code> removes an empty folder. Empty the folder first. <code>run</code> starts a <code>.gob</code> app from <code>Apps</code>. <code>rundos</code> starts a <code>.COM</code> or <code>.EXE</code> from <code>Dos/Apps</code>. A GooberC program can use <code>goober.fs</code> to read, write, and list the same paths. The language page for that is <a href="gooberc/fs.html">Files</a>.</p>
+        <p>On GooberFS, type the capital letters the file was saved with. <code>cd desktop</code> does not open <code>Desktop</code>. On FAT32, those two names are the same file.</p>
+
+        <h2 id="limits">Limitations</h2>
+        <p>These are the limits of the current desktop, on both filesystems where the list is shared, and on GooberFS where the volume adds its own.</p>
+        <table>
+          <thead>
+            <tr><th>Limit</th><th>What it means</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>31-character names</td>
+              <td>A name longer than 31 characters is refused on GooberFS. The same length is what the desktop keeps for a FAT32 name. <code>/</code> and <code>\</code> cannot appear in a name.</td>
+            </tr>
+            <tr>
+              <td>32 files and 16 folders at the root</td>
+              <td>File Explorer and the shell list that many entries in <code>Z:/</code>. The install already uses several of the folder slots for Desktop, Apps, Dos, Config, home, tmp, lib, and usr.</td>
+            </tr>
+            <tr>
+              <td>24 files and 12 folders inside a folder</td>
+              <td>A folder below the root lists that many. <code>Apps</code> and <code>Dos/Apps</code> are sized to fit the programs the installer copies.</td>
+            </tr>
+            <tr>
+              <td>113 names in one GooberFS folder</td>
+              <td>The volume stores at most one 4096-byte block of names per folder, which is 113 files and folders together. The desktop list stops at the smaller counts above.</td>
+            </tr>
+            <tr>
+              <td>126 to 2,046 files and folders on GooberFS</td>
+              <td>The volume has 128 slots on a small disk and 2,048 on a large one. Two slots are reserved, so those disks hold 126 and 2,046 files and folders.</td>
+            </tr>
+            <tr>
+              <td>4 GiB minus one byte</td>
+              <td>That is the largest single file on FAT32 and on GooberFS.</td>
+            </tr>
+            <tr>
+              <td>32 stretches per GooberFS file</td>
+              <td>A file written in one piece uses one stretch and can fill the free space, up to the size limit. After many deletes and rewrites, a file can be split. The save fails if it would need a 33rd stretch.</td>
+            </tr>
+            <tr>
+              <td>Eight open files</td>
+              <td>GooberFS keeps eight files open at once.</td>
+            </tr>
+            <tr>
+              <td>Case-sensitive GooberFS names</td>
+              <td><code>Readme.txt</code> and <code>readme.txt</code> are different files. Tab completion uses the case you type.</td>
+            </tr>
+            <tr>
+              <td>Empty a folder before <code>rmdir</code></td>
+              <td>A folder that still contains a file or a folder stays where it is.</td>
+            </tr>
+            <tr>
+              <td>No owners, permissions, or timestamps</td>
+              <td>GooberFS does not record who wrote a file, who may read it, or when it was saved. The editor’s “saved” line is the editor, not a clock stored on the volume.</td>
+            </tr>
+            <tr>
+              <td>A crash can drop the newest save</td>
+              <td>The previous copy of the file remains. Free space left behind by a crash stays unused. There is no filesystem check to recover it.</td>
+            </tr>
+            <tr>
+              <td>Other computers read FAT32</td>
+              <td>To move files to Windows or Linux, use a FAT32 system volume, or copy them onto the FAT32 boot partition. A GooberFS volume stays on GooberOS.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </div>
+  <footer class="foot">
+    <span>GooberOS</span>
+    <nav>
+      <a href="downloads.html">Download</a>
+      <a href="documentation.html">Documentation</a>
+      <a href="gooberc/index.html">GooberC</a>
+    </nav>
+  </footer>
+</body>
+</html>
