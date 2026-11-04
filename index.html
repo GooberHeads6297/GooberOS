@@ -13,6 +13,7 @@
     <nav>
       <a class="here" href="index.html">Overview</a>
       <a href="downloads.html">Download</a>
+      <a href="documentation.html">Documentation</a>
       <a href="gooberc/index.html">GooberC</a>
     </nav>
   </header>
@@ -57,7 +58,8 @@
     </figure>
     <div class="band-copy">
       <h2>Boot it, then install it</h2>
-      <p>The ISO starts a live system on BIOS and UEFI machines. From there, the installer writes GooberOS onto a disk. A 64-bit image and a 32-bit image are both available.</p>
+      <p>The ISO starts a live system on BIOS and UEFI machines. From there, the installer writes GooberOS onto a disk as FAT32 or GooberFS. A 64-bit image and a 32-bit image are both available.</p>
+      <p><a href="documentation.html">How to choose the filesystem</a></p>
       <p><a class="pill" href="downloads.html">Get the ISO</a></p>
     </div>
   </section>
@@ -117,6 +119,10 @@
       <p>The Download page saves the latest ISO. Choose the 64-bit image for a current PC, or the 32-bit image for an older one. Write it to a USB drive, or attach it as a virtual disc, and boot it.</p>
     </details>
     <details>
+      <summary>FAT32 or GooberFS?</summary>
+      <p>The installer asks for the system volume. FAT32 keeps boot files and your files on one partition that other computers can read. GooberFS keeps a small FAT32 boot partition and stores your files on a GooberFS volume. The <a href="documentation.html">Documentation</a> page covers the choice and the limits.</p>
+    </details>
+    <details>
       <summary>What is GooberC?</summary>
       <p>GooberC is a short, line-oriented language. You compile a <code>.gc</code> file into a <code>.gob</code> program and run it on the desktop or in the shell. The reference starts on the GooberC page.</p>
     </details>
@@ -126,6 +132,7 @@
     <span>GooberOS</span>
     <nav>
       <a href="downloads.html">Download</a>
+      <a href="documentation.html">Documentation</a>
       <a href="gooberc/index.html">GooberC</a>
     </nav>
   </footer>
