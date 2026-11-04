@@ -109,6 +109,7 @@ a { color: var(--link); }
   color: var(--menu-fg);
   font-size: 1.15rem;
   font-weight: 650;
+  scroll-margin-top: 56px;
 }
 
 .client h3 {
@@ -217,6 +218,14 @@ a { color: var(--link); }
 .subnav a.here {
   background: var(--title);
   color: #fff;
+}
+
+kbd {
+  font-family: inherit;
+  font-size: 0.85em;
+  background: var(--button);
+  border: 1px solid var(--border);
+  padding: 0 5px;
 }
 
 code,
@@ -602,7 +611,8 @@ th {
 .foot a:hover { color: #fff; }
 
 @media (max-width: 800px) {
-  .top { padding: 0 16px; gap: 12px; }
+  .top { height: auto; min-height: 42px; flex-wrap: wrap; padding: 8px 16px; gap: 8px 12px; }
+  .top nav { flex-basis: 100%; flex-wrap: wrap; }
   .hero { padding: 48px 16px 12px; }
   .stage,
   .band,
