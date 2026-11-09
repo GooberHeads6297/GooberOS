@@ -13,6 +13,7 @@
     <nav>
       <a href="../index.html">Overview</a>
       <a href="../downloads.html">Download</a>
+      <a href="../documentation.html">Documentation</a>
       <a class="here" href="index.html">GooberC</a>
     </nav>
   </header>
@@ -31,6 +32,7 @@
           <a href="dos.html">DOS</a>
           <a href="auto.html">Auto</a>
           <a href="gfx3d.html">3D</a>
+          <a href="#license">License</a>
         </nav>
 
         <p class="lead">GooberC is the programming language for GooberOS apps. You write a short text file, compile it, and run the result as a normal app on the desktop or in the shell.</p>
@@ -145,9 +147,41 @@ run Apps/Hi.gob</code></pre>
             <tr><td>Starting a DOS program with <code>dos_run</code></td><td><a href="dos.html">DOS</a></td></tr>
             <tr><td>Timed scripts</td><td><a href="auto.html">Auto</a></td></tr>
             <tr><td>Software 3D: camera, shading, shapes</td><td><a href="gfx3d.html">3D</a></td></tr>
+            <tr><td>The license for the compiler and the language</td><td><a href="#license">License</a></td></tr>
           </tbody>
         </table>
         <p>On a booted system the module notes are the files under <code>/lib/goober/</code>. <code>.gob</code> files must be version <strong>2</strong>. A program built by an older compiler is rejected. Compile its <code>.gc</code> source again with the current <code>gooberc</code>.</p>
+
+        <h2 id="license">License</h2>
+        <p>GooberC is part of GooberOS and is covered by the same BSD 3-Clause License. Copyright (c) 2025, GooberHeads. Programs you write in GooberC are yours. The license below covers the compiler, the language, and the rest of GooberOS.</p>
+        <pre><code>BSD 3-Clause License
+
+Copyright (c) 2025, GooberHeads
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+   contributors may be used to endorse or promote products derived from
+   this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</code></pre>
       </div>
     </article>
   </div>

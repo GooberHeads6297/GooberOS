@@ -45,7 +45,7 @@
         </section>
 
         <h2>Boot it</h2>
-        <p>Write the ISO to a USB drive, or attach it as a virtual optical drive. It boots on BIOS and UEFI. From the live desktop, open the installer, or use the shell:</p>
+        <p>Write the ISO to a USB drive with <a href="requirements.html#etcher">balenaEtcher</a> or <a href="requirements.html#rufus">Rufus</a>, or attach it as a virtual optical drive. It boots on BIOS and UEFI. The <a href="requirements.html">system requirements</a> list the PC, the USB drive, and the disk the installer can erase. From the live desktop, open the installer, or use the shell:</p>
         <pre><code>install list
 install fat32 &lt;target-id&gt; YES GPT</code></pre>
         <p><code>YES GPT</code> is for UEFI. Use <code>YES MBR</code> for a legacy BIOS disk. Then reboot from that disk.</p>

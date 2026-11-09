@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>System requirements — GooberOS</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="index.html">GooberOS</a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a href="downloads.html">Download</a>
+      <a class="here" href="documentation.html">Documentation</a>
+      <a href="gooberc/index.html">GooberC</a>
+    </nav>
+  </header>
+  <div class="desktop">
+    <article class="window">
+      <h1 class="titlebar">System requirements</h1>
+      <div class="client">
+        <nav class="subnav">
+          <a href="documentation.html">Filesystems</a>
+          <a class="here" href="requirements.html">Requirements</a>
+          <a href="#machine">The PC</a>
+          <a href="#etcher">balenaEtcher</a>
+          <a href="#rufus">Rufus</a>
+        </nav>
+
+        <p class="lead">GooberOS boots from a live ISO on a BIOS or UEFI PC. balenaEtcher and Rufus write that ISO to a USB drive. The installer inside the live desktop is what copies GooberOS onto a disk.</p>
+
+        <h2 id="machine">The PC</h2>
+        <table>
+          <thead>
+            <tr><th>Part</th><th>What it needs</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Processor</td>
+              <td>An x86-64 PC for <code>GooberOSx86-x64.iso</code>. An older 32-bit PC for <code>GooberOSx86.iso</code>.</td>
+            </tr>
+            <tr>
+              <td>Firmware</td>
+              <td>Legacy BIOS or UEFI. Turn UEFI Secure Boot off. The ISO is not signed for Secure Boot.</td>
+            </tr>
+            <tr>
+              <td>Memory</td>
+              <td>64 MB of RAM. The kernel keeps a 16 MB working area for the desktop and programs, and 8 MB of that can hold a DOS program.</td>
+            </tr>
+            <tr>
+              <td>Display</td>
+              <td>A graphical screen the firmware can set, 800×600 or larger, at 15, 16, 24, or 32 bits per pixel. BIOS uses VESA. UEFI uses the GOP framebuffer.</td>
+            </tr>
+            <tr>
+              <td>Keyboard and mouse</td>
+              <td>PS/2 or USB. The desktop uses the mouse. The shell can be driven from the keyboard.</td>
+            </tr>
+            <tr>
+              <td>Live USB</td>
+              <td>A USB drive larger than the ISO, which is about 55 MB. A 1 GB drive is a comfortable choice. Writing the image erases that drive.</td>
+            </tr>
+            <tr>
+              <td>Install disk</td>
+              <td>A second disk you can erase: ATA, SATA, NVMe, SD or eMMC, or another USB drive. A FAT32 install needs about 40 MB. GooberFS needs about 8 MB more. A 1 GB disk is a comfortable target.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>The USB drive is the live system. Boot it, then open the installer and choose the internal disk. The installer erases the whole target. Partition style and FAT32 or GooberFS are chosen there, which is covered on the <a href="documentation.html">filesystem page</a>.</p>
+        <p>A virtual machine can boot the ISO as a virtual disc. That path skips Etcher and Rufus. Give the machine the same CPU type as the ISO, 64 MB of RAM or more, and a virtual disk of 1 GB or more.</p>
+
+        <h2 id="etcher">balenaEtcher</h2>
+        <p>Use Etcher when you want the fewest choices. It runs on Windows, macOS, and Linux, and it writes the hybrid ISO as a single image. That image boots on BIOS and on UEFI.</p>
+        <ol>
+          <li>Download <code>GooberOSx86-x64.iso</code> or <code>GooberOSx86.iso</code> from the <a href="downloads.html">Download</a> page.</li>
+          <li>Open balenaEtcher and choose <strong>Flash from file</strong>. Select the ISO.</li>
+          <li>Choose the USB drive. Etcher erases the drive you select.</li>
+          <li>Flash the image, then boot the PC from that USB drive.</li>
+        </ol>
+        <p>This is the right tool for a first USB stick, for a lab machine, or when you are not on Windows. You do not pick MBR or GPT in Etcher. Those choices belong to the GooberOS installer, after the machine has booted the stick.</p>
+
+        <h2 id="rufus">Rufus</h2>
+        <p>Use Rufus when you are on Windows and you want to see the target drive and the write mode before anything is erased. Rufus asks how to write a hybrid ISO. Choose <strong>DD Image mode</strong>. That writes the ISO byte for byte, so the BIOS and UEFI boot records stay as GooberOS built them.</p>
+        <ol>
+          <li>Download the ISO from the <a href="downloads.html">Download</a> page.</li>
+          <li>Open Rufus and select the USB drive under <strong>Device</strong>.</li>
+          <li>Select the ISO as the boot selection.</li>
+          <li>When Rufus asks about the write mode, choose <strong>DD Image mode</strong>.</li>
+          <li>Start. Rufus erases the selected drive. Boot the PC from that USB drive.</li>
+        </ol>
+        <p>ISO mode in Rufus rebuilds the stick as a new disk. Use DD Image mode for this ISO so the hybrid layout remains. The MBR or GPT choice for the installed system is still made later, inside the GooberOS installer, on the disk you install to.</p>
+
+        <h2>Which writer to use</h2>
+        <table>
+          <thead>
+            <tr><th>Situation</th><th>Use</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Windows, macOS, or Linux, and you want one image written with no extra options</td>
+              <td>balenaEtcher</td>
+            </tr>
+            <tr>
+              <td>Windows, and Rufus asks whether to write the hybrid ISO in ISO mode or DD mode</td>
+              <td>Rufus, in DD Image mode</td>
+            </tr>
+            <tr>
+              <td>A virtual machine</td>
+              <td>Attach the ISO as a virtual disc. Leave Etcher and Rufus out of it.</td>
+            </tr>
+            <tr>
+              <td>The live USB already boots, and you want GooberOS on an internal disk</td>
+              <td>The installer on the GooberOS desktop. Etcher and Rufus have finished their job.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </div>
+  <footer class="foot">
+    <span>GooberOS</span>
+    <nav>
+      <a href="downloads.html">Download</a>
+      <a href="documentation.html">Documentation</a>
+      <a href="gooberc/index.html">GooberC</a>
+    </nav>
+  </footer>
+</body>
+</html>
